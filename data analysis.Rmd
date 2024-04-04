@@ -4,27 +4,77 @@ author: "Sydney Jansen"
 date: "2024-03-25"
 output: html_document
 ---
+---
+title: "Data Analysis Replication Assignment"
+author: "Your Name"
+date: "Date"
+output:
+    html_document
+---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# These are some {knitr} options I typically use to format my **RMarkdown** documents in a consistent way. You should feel free to alter these or use other "chunk options" as you see fit!
+# Sometimes, for example, you might want to suppress warnings or messages, and that behavior can be set for specific code chunks individually in the chunk header, e.g., ```{r warning = FALSE, echo = FALSE}
+knitr::opts_chunk$set(
+  eval = TRUE, # run code in code chunks
+  echo = TRUE, # render output of code chunks
+  warning = TRUE, # do not suppress "warnings"
+  message = TRUE, # do not suppress "messages"
+  comment = "##", # prefix for comment lines
+  prompt = ">", # prefix for code lines
+  tidy = TRUE,
+  tidy.opts = list(blank = FALSE, width.cutoff = 75),
+  fig.path = "images/", # name of folder for images
+  fig.align = "center" # centers any images on the page
+)
 ```
 
-## R Markdown
+## Introduction
+Objective: To investigate vocal plasticity in the tokay gecko (Gekko gecko) by determining if the geckos adjusted the properties of their calls in response to changes in background noise. {the first evidence for vocal plasticity in a reptile}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Methods (the types of data collected and how sampling was done): The researchers recorded advertisement calls of captive-bred male tokay geckos under different noise conditions and analyzed the duration and amplitude of different call types. 6 males were placed in a sound-chamber with opposing speakers: white noise encapsulating their hearing range and their calls recorded for 4 days. During the recording session, 24 h periods of broadcast noise were alternated with 24 h periods of silence.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Results: Geckos increased the duration of their call syllables in response to noise, but did not adjust the amplitude of their calls. Instead, they produced more high-amplitude syllables and fewer low-amplitude syllables in noise. This demonstrated that the geckos were able to increase the overall signal-to-noise ratio of their calls without using the Lombard effect. In other words, the geckos traded the number of low-amplitude and high-amplitude syllables in each call series to produce more of the louder notes in noise, rather than increasing the amplitude of all components of their call. 
 
-```{r cars}
-summary(cars)
+What I intend to replicate: 
+
+## Visualization of Data
+
+[Include a view of the first few lines of the dataset plus any exploratory data analysis - e.g., overview of descriptive statistics included in the paper, plots, etc.]
+
+## Statistical Replications/Reanalysis
+
+[Be sure to **thoroughly** explain what replications you are doing and comment your code so that it is easy for a reader to understand. Include in this section relevant tables/figures/values from the original paper for comparison to what you accomplished with your replication. Note that I want you to do the bulk of any *exposition* using text and markdown syntax outside of code blocks. That is, your document should not just be one big code block with ***R*** style comments but rather a nicely formatted report with code separated from exposition, interpretation, and dicussion.]
+
+## Summary/Discussion
+
+[Narrative section that overviews how successful were you at replicating the analyses and visualizations in the study. What problems did you encounter? Why might you have encountered those problems? What details were lacking from the original study's methods that might have hampered your ability to replicate the authors' results?]
+
+## References
+Brumm H, Zollinger SA. 2017 Vocal plasticity in a reptile. Proc. R. Soc. B 284: 20170451.http://dx.doi.org/10.1098/rspb.2017.0451
+
+[Include the citation for your paper, plus any other literature you might reference.]
+Descriptive statistical analysis (summarizing and describing the primary properties of a dataset):
+
+The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually. 
+```{}
+
+```
+Visualization statistical analysis (graphs):
+
+The effect on the number of call types was examined with generalized linearmixed models (GLMMs), in which the count data were fitted with a Poisson distribution and a log link function. 
+
+```{r }
+
+```
+Inferential statistical analysis ( the practice of using sampled data to draw conclusions or make predictions about a larger sample data sample or population):
+
+The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
+
+```{r }
+
 ```
 
-## Including Plots
+```{r }
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
