@@ -4,13 +4,7 @@ author: "Sydney Jansen"
 date: "2024-03-25"
 output: html_document
 ---
----
-title: "Data Analysis Replication Assignment"
-author: "Your Name"
-date: "Date"
-output:
-    html_document
----
+thoroughly describe and run the code for all of the steps in your reanalysis.
 
 ```{r setup, include=FALSE}
 # These are some {knitr} options I typically use to format my **RMarkdown** documents in a consistent way. You should feel free to alter these or use other "chunk options" as you see fit!
@@ -32,7 +26,7 @@ knitr::opts_chunk$set(
 ## Introduction
 Objective: To investigate vocal plasticity in the tokay gecko (Gekko gecko) by determining if the geckos adjusted the properties of their calls in response to changes in background noise. {the first evidence for vocal plasticity in a reptile}
 
-Methods (the types of data collected and how sampling was done): The researchers recorded advertisement calls of captive-bred male tokay geckos under different noise conditions and analyzed the duration and amplitude of different call types. 6 males were placed in a sound-chamber with opposing speakers: white noise encapsulating their hearing range and their calls recorded for 4 days. During the recording session, 24 h periods of broadcast noise were alternated with 24 h periods of silence.
+Methods: The researchers recorded advertisement calls of captive-bred male tokay geckos under different noise conditions and analyzed the duration and amplitude of different call types. 6 males were placed in a sound-chamber with opposing speakers: white noise encapsulating their hearing range and their calls recorded for 4 days. During the recording session, 24 h periods of broadcast noise were alternated with 24 h periods of silence.
 
 Results: Geckos increased the duration of their call syllables in response to noise, but did not adjust the amplitude of their calls. Instead, they produced more high-amplitude syllables and fewer low-amplitude syllables in noise. This demonstrated that the geckos were able to increase the overall signal-to-noise ratio of their calls without using the Lombard effect. In other words, the geckos traded the number of low-amplitude and high-amplitude syllables in each call series to produce more of the louder notes in noise, rather than increasing the amplitude of all components of their call. 
 
@@ -64,12 +58,18 @@ Visualization statistical analysis (graphs):
 
 The effect on the number of call types was examined with generalized linearmixed models (GLMMs), in which the count data were fitted with a Poisson distribution and a log link function. 
 
+Figure 3: This figure shows the correlation between the two syllable types (cackles and GECK-O syllables) within tokay call series. ​ It includes two sub-figures: (a) a sample across five males with five randomly selected calls from each, and (b) all calls from the male from which the highest number of calls was recorded. ​ The size of the bubbles represents the number of observations.
+
 ```{r }
 
 ```
 Inferential statistical analysis ( the practice of using sampled data to draw conclusions or make predictions about a larger sample data sample or population):
 
 The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
+
+
+The authors performed several inferential statistical analyses in their study. Specifically, they used linear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models. 
+
 
 ```{r }
 
