@@ -4,8 +4,6 @@ author: "Sydney Jansen"
 date: "2024-03-25"
 output: html_document
 ---
-thoroughly describe and run the code for all of the steps in your reanalysis.
-
 ```{r setup, include=FALSE}
 # These are some {knitr} options I typically use to format my **RMarkdown** documents in a consistent way. You should feel free to alter these or use other "chunk options" as you see fit!
 # Sometimes, for example, you might want to suppress warnings or messages, and that behavior can be set for specific code chunks individually in the chunk header, e.g., ```{r warning = FALSE, echo = FALSE}
@@ -30,15 +28,123 @@ Methods: The researchers recorded advertisement calls of captive-bred male tokay
 
 Results: Geckos increased the duration of their call syllables in response to noise, but did not adjust the amplitude of their calls. Instead, they produced more high-amplitude syllables and fewer low-amplitude syllables in noise. This demonstrated that the geckos were able to increase the overall signal-to-noise ratio of their calls without using the Lombard effect. In other words, the geckos traded the number of low-amplitude and high-amplitude syllables in each call series to produce more of the louder notes in noise, rather than increasing the amplitude of all components of their call. 
 
-What I intend to replicate: 
+What I intend to replicate: The effect of noise on vocalization amplitude, duration, and the number of call types was assessed using mixed-effects models. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment.
+Linear mixed models (LMMs) were utilized to investigate the treatment effects (noise vs. no noise) on amplitude and duration of calls. These models allow for the inclusion of both fixed effects (e.g., noise treatment) and random effects (e.g., individual differences among geckos), providing a way to account for the hierarchical structure of the data.
+Generalized linear mixed models (GLMMs) were used for analyzing the number of call types, fitting the count data with a Poisson distribution and a log link function. This approach is suitable for count data that follow a Poisson distribution, which is often the case for the number of occurrences of a particular event within a fixed period or space.
+The researchers also analyzed whether noise treatment affected the duration of the first GECK and the first O note of each call series by fitting LMMs with the individual as a random effect.
+They conducted likelihood ratio tests to compare models including the noise treatment to null models (without the treatment effect), which helps determine the significance of the treatment effect on call parameters.
+Correlation Analysis: Spearman rank correlations were used to investigate the relationship between the number of cackle calls and the number of GECK-O syllables in a call series. This non-parametric measure of correlation is suitable for ordinal data or when the assumption of a linear relationship between variables does not hold.
+
+#Load packages
+```{r message=FALSE}
+library(tidyverse)
+library(knitr)
+library()
+library()
+library()
+library(ggpubr)
+```
+#Load in Data: Raw Data from 6 individuals of treatment, series, type, duration, and amplitude. They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
+
+```{r }
+f<- "https://github.com/SydneyJansen/data-analysis-replication/blob/main/data/rawdata.csv"
+data <- read.csv(file)
+#They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
+data <- data |>  filter(!is.na(duration..s.))
+#View data
+head(data)
+names(data)
+print(data)
+## I am Log-transforming a variable
+#data_clean$log_variable <- log(data_clean$variable)
+
+
+```
+
 
 ## Visualization of Data
 
 [Include a view of the first few lines of the dataset plus any exploratory data analysis - e.g., overview of descriptive statistics included in the paper, plots, etc.]
 
+
+Figure 3: This figure shows the correlation between the two syllable types (cackles and GECK-O syllables) within tokay call series. ​ It includes two sub-figures: (a) a sample across five males with five randomly selected calls from each, and (b) all calls from the male from which the highest number of calls was recorded. ​ The size of the bubbles represents the number of observations.
+
+```{r }
+library(ggplot2)
+
+# Example: Plotting call amplitude by noise condition
+ggplot(dataset, aes(x = noise_condition, y = amplitude)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Call Amplitude by Noise Condition",
+       x = "Noise Condition",
+       y = "Amplitude")
+
+```
+
+```{r echo=FALSE}
+knitr::include_graphics("images/file.png")
+```
+
 ## Statistical Replications/Reanalysis
 
 [Be sure to **thoroughly** explain what replications you are doing and comment your code so that it is easy for a reader to understand. Include in this section relevant tables/figures/values from the original paper for comparison to what you accomplished with your replication. Note that I want you to do the bulk of any *exposition* using text and markdown syntax outside of code blocks. That is, your document should not just be one big code block with ***R*** style comments but rather a nicely formatted report with code separated from exposition, interpretation, and dicussion.]
+
+In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models (LMMs), model residuals were checked visually.
+
+Descriptive statistical analysis (summarizing and describing the primary properties of a dataset):
+Counting Different Call Types and Measuring Their Amplitude: This involves basic descriptive analysis, where the researchers counted the occurrences of different vocalization types and measured their amplitude to describe the vocal behavior of tokay geckos.
+Measurement of Call Durations: Measuring and comparing the durations of GECK and O notes under different noise conditions also fall under descriptive analysis. It provides a straightforward description of how call durations vary with environmental noise.
+
+
+```{}
+# Load dplyr for data manipulation
+library(dplyr)
+
+# Basic descriptive statistics for amplitude by noise condition
+dataset %>%
+  group_by(noise_condition) %>%
+  summarize(mean_amplitude = mean(amplitude, na.rm = TRUE),
+            sd_amplitude = sd(amplitude, na.rm = TRUE),
+            n = n())
+
+```
+
+Inferential statistical analysis:
+Methods: The authors used linear mixed models (LMMs) The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually.
+
+Results: 
+Replication: 
+
+The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
+The authors used alinear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models. 
+
+
+```{r }
+library(lme4)
+#  log-transformed
+logdata <- lmer(data = data, animal ~ treatment + series + type + duration + amplitude + (1|PairID), REML = FALSE)
+# Check if the data fit the assumptions using the ggResidpanel package:
+resid_panel(model1) # the histogram looks bad; lots of weight in the center and not normally distributed.
+# Make a log version of Used_Material:
+data$log_Used_Material <- log(data$Used_Material)
+# Try the model again using the log_Used_Material.
+model2 <- lmer(data = data, log_Used_Material ~ Experience + Nest_No + Time_Taken + (1|PairID), REML = FALSE)
+# And check again with ggResidpanel:
+resid_panel(model2) # the histogram looks much better now!
+# The values are closer to the results! Same p-value!
+model_summary <- summary(model2)
+print(model_summary)
+# LMM for call amplitude or duration as a function of noise condition, with random intercepts for individual
+lmm_result <- lmer(amplitude ~ noise_condition + (1|individual), data = dataset)
+summary(lmm_result)
+
+# GLMM for count data (e.g., number of call types) with a Poisson distribution
+glmm_result <- glmer(num_call_types ~ noise_condition + (1|individual), data = dataset, family = "poisson")
+summary(glmm_result)
+
+
+```
 
 ## Summary/Discussion
 
@@ -47,33 +153,8 @@ What I intend to replicate:
 ## References
 Brumm H, Zollinger SA. 2017 Vocal plasticity in a reptile. Proc. R. Soc. B 284: 20170451.http://dx.doi.org/10.1098/rspb.2017.0451
 
-[Include the citation for your paper, plus any other literature you might reference.]
-Descriptive statistical analysis (summarizing and describing the primary properties of a dataset):
-
-The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually. 
-```{}
-
-```
-Visualization statistical analysis (graphs):
-
-The effect on the number of call types was examined with generalized linearmixed models (GLMMs), in which the count data were fitted with a Poisson distribution and a log link function. 
-
-Figure 3: This figure shows the correlation between the two syllable types (cackles and GECK-O syllables) within tokay call series. ​ It includes two sub-figures: (a) a sample across five males with five randomly selected calls from each, and (b) all calls from the male from which the highest number of calls was recorded. ​ The size of the bubbles represents the number of observations.
-
-```{r }
-
-```
-Inferential statistical analysis ( the practice of using sampled data to draw conclusions or make predictions about a larger sample data sample or population):
-
-The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
 
 
-The authors performed several inferential statistical analyses in their study. Specifically, they used linear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models. 
-
-
-```{r }
-
-```
 
 ```{r }
 
