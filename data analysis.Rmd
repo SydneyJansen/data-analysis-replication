@@ -7,18 +7,9 @@ output: html_document
 ```{r setup, include=FALSE}
 # These are some {knitr} options I typically use to format my **RMarkdown** documents in a consistent way. You should feel free to alter these or use other "chunk options" as you see fit!
 # Sometimes, for example, you might want to suppress warnings or messages, and that behavior can be set for specific code chunks individually in the chunk header, e.g., ```{r warning = FALSE, echo = FALSE}
-knitr::opts_chunk$set(
-  eval = TRUE, # run code in code chunks
-  echo = TRUE, # render output of code chunks
-  warning = TRUE, # do not suppress "warnings"
-  message = TRUE, # do not suppress "messages"
-  comment = "##", # prefix for comment lines
-  prompt = ">", # prefix for code lines
-  tidy = TRUE,
-  tidy.opts = list(blank = FALSE, width.cutoff = 75),
-  fig.path = "images/", # name of folder for images
-  fig.align = "center" # centers any images on the page
-)
+
+knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 ## Introduction
@@ -27,13 +18,6 @@ Objective: To investigate vocal plasticity in the tokay gecko (Gekko gecko) by d
 Methods: The researchers recorded advertisement calls of captive-bred male tokay geckos under different noise conditions and analyzed the duration and amplitude of different call types. 6 males were placed in a sound-chamber with opposing speakers: white noise encapsulating their hearing range and their calls recorded for 4 days. During the recording session, 24 h periods of broadcast noise were alternated with 24 h periods of silence.
 
 Results: Geckos increased the duration of their call syllables in response to noise, but did not adjust the amplitude of their calls. Instead, they produced more high-amplitude syllables and fewer low-amplitude syllables in noise. This demonstrated that the geckos were able to increase the overall signal-to-noise ratio of their calls without using the Lombard effect. In other words, the geckos traded the number of low-amplitude and high-amplitude syllables in each call series to produce more of the louder notes in noise, rather than increasing the amplitude of all components of their call. 
-
-What I intend to replicate: The effect of noise on vocalization amplitude, duration, and the number of call types was assessed using mixed-effects models. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment.
-Linear mixed models (LMMs) were utilized to investigate the treatment effects (noise vs. no noise) on amplitude and duration of calls. These models allow for the inclusion of both fixed effects (e.g., noise treatment) and random effects (e.g., individual differences among geckos), providing a way to account for the hierarchical structure of the data.
-Generalized linear mixed models (GLMMs) were used for analyzing the number of call types, fitting the count data with a Poisson distribution and a log link function. This approach is suitable for count data that follow a Poisson distribution, which is often the case for the number of occurrences of a particular event within a fixed period or space.
-The researchers also analyzed whether noise treatment affected the duration of the first GECK and the first O note of each call series by fitting LMMs with the individual as a random effect.
-They conducted likelihood ratio tests to compare models including the noise treatment to null models (without the treatment effect), which helps determine the significance of the treatment effect on call parameters.
-Correlation Analysis: Spearman rank correlations were used to investigate the relationship between the number of cackle calls and the number of GECK-O syllables in a call series. This non-parametric measure of correlation is suitable for ordinal data or when the assumption of a linear relationship between variables does not hold.
 
 #Load packages
 ```{r message=FALSE}
@@ -64,10 +48,13 @@ print(data)
 
 ## Visualization of Data
 
-[Include a view of the first few lines of the dataset plus any exploratory data analysis - e.g., overview of descriptive statistics included in the paper, plots, etc.]
+There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise and the y axis is the miliseconds of call duration. 
 
+Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
-Figure 3: This figure shows the correlation between the two syllable types (cackles and GECK-O syllables) within tokay call series. ​ It includes two sub-figures: (a) a sample across five males with five randomly selected calls from each, and (b) all calls from the male from which the highest number of calls was recorded. ​ The size of the bubbles represents the number of observations.
+```{r out.width="400px", fig.cap="Figure 5. Experienced pairs used less coconut fiber to build nests than inexperienced pairs."}
+knitr::include_graphics("https://github.com/jennieandbird/data-analysis-replication/blob/main/images/figure5.PNG?raw=true")
+```
 
 ```{r }
 library(ggplot2)
@@ -87,6 +74,20 @@ knitr::include_graphics("images/file.png")
 ```
 
 ## Statistical Replications/Reanalysis
+
+Inferential statistical analysis:
+Methods: I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
+
+Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).The authors used linear mixed models (LMMs) The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually.
+
+What I intend to replicate: What I intend to replicate: I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
+Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).
+
+Replication: 
+
+
+The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
+The authors used alinear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models.
 
 [Be sure to **thoroughly** explain what replications you are doing and comment your code so that it is easy for a reader to understand. Include in this section relevant tables/figures/values from the original paper for comparison to what you accomplished with your replication. Note that I want you to do the bulk of any *exposition* using text and markdown syntax outside of code blocks. That is, your document should not just be one big code block with ***R*** style comments but rather a nicely formatted report with code separated from exposition, interpretation, and dicussion.]
 
@@ -110,14 +111,7 @@ dataset %>%
 
 ```
 
-Inferential statistical analysis:
-Methods: The authors used linear mixed models (LMMs) The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually.
 
-Results: 
-Replication: 
-
-The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
-The authors used alinear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models. 
 
 
 ```{r }
@@ -143,6 +137,19 @@ summary(lmm_result)
 glmm_result <- glmer(num_call_types ~ noise_condition + (1|individual), data = dataset, family = "poisson")
 summary(glmm_result)
 
+
+```
+Descriptive statistical analysis:
+
+Methods: 
+
+Results: 
+
+What I intend to replicate: 
+
+Replication:
+
+```{r }
 
 ```
 
