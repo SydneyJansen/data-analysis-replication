@@ -23,18 +23,23 @@ Results: Geckos increased the duration of their call syllables in response to no
 ```{r message=FALSE}
 library(tidyverse)
 library(knitr)
-library()
-library()
-library()
+library(ggplot2)
 library(ggpubr)
+library(dplyr)
+library(broom)
+library(jmuOutlier)
+library(infer)
+library(mosaic)
+library(coin)
+
 ```
 #Load in Data: Raw Data from 6 individuals of treatment, series, type, duration, and amplitude. They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
 
 ```{r }
-f<- "https://github.com/SydneyJansen/data-analysis-replication/blob/main/data/rawdata.csv"
+file<- "https://github.com/SydneyJansen/data-analysis-replication/blob/main/data/rawdata.csv"
 data <- read.csv(file)
 #They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
-data <- data |>  filter(!is.na(duration..s.))
+data <- data |>  filter(!is.na(duration))
 #View data
 head(data)
 names(data)
@@ -48,7 +53,7 @@ print(data)
 
 ## Visualization of Data
 
-There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise and the y axis is the miliseconds of call duration. 
+There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise (treatment: noise (1), no noise (0)) and the y axis is the miliseconds of call duration. They used a Sliding scale percent probability ranges chart. 
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
@@ -57,15 +62,60 @@ knitr::include_graphics("https://github.com/x")
 ```
 
 ```{r }
-library(ggplot2)
 
-# Example: Plotting call amplitude by noise condition
-ggplot(dataset, aes(x = noise_condition, y = amplitude)) +
-  geom_boxplot() +
-  theme_minimal() +
-  labs(title = "Call Amplitude by Noise Condition",
-       x = "Noise Condition",
-       y = "Amplitude")
+# Filter the data for treatment GECK=2
+datafig2 <- filter(data, type == 2)
+
+bootstrap_stats <- function(datafig2, n_samples = 1000) {
+  bootstrap_results <- tibble(
+    boot_median = numeric(n_samples),
+    boot_q1 = numeric(n_samples),
+    boot_q3 = numeric(n_samples)
+  )
+  
+  for (i in 1:n_samples) {
+    boot_sample <- sample_n(datafig2, size = n(), replace = TRUE)
+    bootstrap_results[i, ] <- boot_sample %>%
+      summarize(
+        boot_median = median(duration),
+        boot_q1 = quantile(duration, probs = 0.25),
+        boot_q3 = quantile(duration, probs = 0.75)
+      )
+  }
+  
+  return(bootstrap_results)
+}
+
+
+# Permute the data and calculate bootstrap statistics
+permuted_data <- datafig2 %>%
+  filter(type == 2) %>%
+  group_by(treatment) %>%
+  do(bootstrap_stats(., n_samples = 1000))
+
+# Create a ggplot object
+ggplot(permuted_data, aes(x = factor(treatment))) +
+  
+  # Add points for bootstrapped median
+  geom_point(aes(y = boot_median), size = 3) +
+  
+  # Add error bars for bootstrapped quartiles
+  geom_errorbar(
+    aes(ymin = boot_q1, ymax = boot_q3),
+    width = 0.2,
+    position = position_dodge(width = 0.5)
+  ) +
+  
+  # Add labels to axes and title
+  labs(x = "Treatment", y = "Median Call Duration (ms)", title = "Bootstrapped Median Call Duration vs. Treatment") +
+  
+  # Customize theme
+  theme_minimal()
+
+# Display the plot
+print(plot)
+
+
 
 ```
 
