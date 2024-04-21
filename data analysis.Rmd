@@ -52,8 +52,8 @@ There were not enough graphs and too much information in the "bubble graph", so 
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
-```{r out.width="400px", fig.cap="Figure 5. Experienced pairs used less coconut fiber to build nests than inexperienced pairs."}
-knitr::include_graphics("https://github.com/jennieandbird/data-analysis-replication/blob/main/images/figure5.PNG?raw=true")
+```{r out.width="400px", fig.cap="Figure x. x"}
+knitr::include_graphics("https://github.com/x")
 ```
 
 ```{r }
