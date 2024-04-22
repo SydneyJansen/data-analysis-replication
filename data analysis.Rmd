@@ -4,6 +4,7 @@ author: "Sydney Jansen"
 date: "2024-03-25"
 output: html_document
 ---
+
 ```{r setup, include=FALSE}
 # These are some {knitr} options I typically use to format my **RMarkdown** documents in a consistent way. You should feel free to alter these or use other "chunk options" as you see fit!
 # Sometimes, for example, you might want to suppress warnings or messages, and that behavior can be set for specific code chunks individually in the chunk header, e.g., ```{r warning = FALSE, echo = FALSE}
@@ -36,8 +37,11 @@ library(coin)
 #Load in Data: Raw Data from 6 individuals of treatment, series, type, duration, and amplitude. They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
 
 ```{r }
-file<- "https://github.com/SydneyJansen/data-analysis-replication/blob/main/data/rawdata.csv"
-data <- read.csv(file)
+#This worked the entire time until i cleared the environment
+#f<- "https://github.com/SydneyJansen/data-analysis-replication/blob/main/data/rawdata.csv"
+#data<- read.csv(f, header = TRUE)
+f<-"C:/Users/Wildc/OneDrive/Desktop/Data Analysis Class/data-analysis-replication/data/rawdata.csv"
+data<- read.csv(f, header = TRUE)  
 #They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
 data <- data |>  filter(!is.na(duration))
 #View data
@@ -88,35 +92,39 @@ bootstrap_stats <- function(datafig2, n_samples = 1000) {
 
 
 # Permute the data and calculate bootstrap statistics
-permuted_data <- datafig2 %>%
-  filter(type == 2) %>%
-  group_by(treatment) %>%
+permuted_data <- datafig2 |>
+  filter(type == 2) |>
+  group_by(treatment) |>
   do(bootstrap_stats(., n_samples = 1000))
 
 # Create a ggplot object
 ggplot(permuted_data, aes(x = factor(treatment))) +
   
-  # Add points for bootstrapped median
-  geom_point(aes(y = boot_median), size = 3) +
-  
-  # Add error bars for bootstrapped quartiles
-  geom_errorbar(
+  # Add error bar lines for bootstrapped quartiles with end caps
+  geom_linerange(
     aes(ymin = boot_q1, ymax = boot_q3),
-    width = 0.2,
+    color = "black",
+    size = 1.5,
+    position = position_dodge(width = 0.5)
+  ) +
+  
+  # Add mean as a single point
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    aes(y = boot_median),
+    color = "black", 
+    size = 3,
     position = position_dodge(width = 0.5)
   ) +
   
   # Add labels to axes and title
-  labs(x = "Treatment", y = "Median Call Duration (ms)", title = "Bootstrapped Median Call Duration vs. Treatment") +
+  labs(x = "No Noise                                  Noise", y = "Call Duration (ms)", title = "GECK") +
   
   # Customize theme
   theme_minimal()
 
-# Display the plot
-print(plot)
-
-
-
+#
 ```
 
 ```{r echo=FALSE}
