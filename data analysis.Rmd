@@ -61,8 +61,8 @@ There were not enough graphs and too much information in the "bubble graph", so 
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
-```{r out.width="400px", fig.cap="Figure x. x"}
-knitr::include_graphics("https://github.com/x")
+```{r out.width="400px", fig.cap="Figure 2 a"}
+knitr::include_graphics("https://github.com/SydneyJansen/data-analysis-replication/blob/main/images/fig2.png")
 ```
 
 ```{r }
@@ -98,7 +98,7 @@ permuted_data <- datafig2 |>
   do(bootstrap_stats(., n_samples = 1000))
 
 # Create a ggplot object
-ggplot(permuted_data, aes(x = factor(treatment))) +
+my_plot <- ggplot(permuted_data, aes(x = factor(treatment))) +
   
   # Add error bar lines for bootstrapped quartiles with end caps
   geom_linerange(
@@ -124,7 +124,10 @@ ggplot(permuted_data, aes(x = factor(treatment))) +
   # Customize theme
   theme_minimal()
 
-#
+# Save the plot as an image file
+ggsave("fig2.png", plot = my_plot, width = 8, height = 6, units = "in", dpi = 300)
+
+#I have no idea why the plot in the OG is 80-155
 ```
 
 ```{r echo=FALSE}
