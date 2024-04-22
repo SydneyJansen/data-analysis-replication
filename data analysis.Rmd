@@ -57,7 +57,11 @@ print(data)
 
 ## Visualization of Data
 
-There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise (treatment: noise (1), no noise (0)) and the y axis is the miliseconds of call duration. They used a Sliding scale percent probability ranges chart. 
+Methods: There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise (treatment: noise (1), no noise (0)) and the y axis is the miliseconds of call duration. 
+
+Results: There was a slight difference in mean between no noise and noise in relation to call duration. While these results are similar to the original graph, the plot range is different. This is most likely due to me bootstrapping the data instead of doing a LMM or GLMM as stated later in the methods that I will be replicating later. 
+
+Replication:
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
@@ -114,7 +118,7 @@ my_plot <- ggplot(permuted_data, aes(x = factor(treatment))) +
     geom = "point", 
     aes(y = boot_median),
     color = "black", 
-    size = 3,
+    size = 5,
     position = position_dodge(width = 0.5)
   ) +
   
@@ -123,6 +127,8 @@ my_plot <- ggplot(permuted_data, aes(x = factor(treatment))) +
   
   # Customize theme
   theme_minimal()
+
+print(my_plot)
 
 # Save the plot as an image file
 ggsave("fig2.png", plot = my_plot, width = 8, height = 6, units = "in", dpi = 300)
@@ -141,7 +147,7 @@ Methods: I plan to replicate a linear mixed models (LMMs) from the *R* package `
 
 Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).The authors used linear mixed models (LMMs) The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually.
 
-What I intend to replicate: What I intend to replicate: I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
+What I intend to replicate: I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
 Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).
 
 Replication: 
@@ -160,15 +166,15 @@ Measurement of Call Durations: Measuring and comparing the durations of GECK and
 
 
 ```{}
-# Load dplyr for data manipulation
-library(dplyr)
+# Load the lme4 package
+library(lme4)
 
-# Basic descriptive statistics for amplitude by noise condition
-dataset %>%
-  group_by(noise_condition) %>%
-  summarize(mean_amplitude = mean(amplitude, na.rm = TRUE),
-            sd_amplitude = sd(amplitude, na.rm = TRUE),
-            n = n())
+# Fit the linear mixed model
+lmm <- lmer(Duration ~ Treatment + (1 | Gecko) + (1 | Series), data = data)
+
+# Print the summary of the model
+summary(lmm)
+
 
 ```
 
