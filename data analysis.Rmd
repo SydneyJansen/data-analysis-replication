@@ -32,6 +32,8 @@ library(jmuOutlier)
 library(infer)
 library(mosaic)
 library(coin)
+library(Matrix)
+library(lme4)
 
 ```
 #Load in Data: Raw Data from 6 individuals of treatment, series, type, duration, and amplitude. They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
@@ -61,13 +63,14 @@ Methods: There were not enough graphs and too much information in the "bubble gr
 
 Results: There was a slight difference in mean between no noise and noise in relation to call duration. While these results are similar to the original graph, the plot range is different. This is most likely due to me bootstrapping the data instead of doing a LMM or GLMM as stated later in the methods that I will be replicating later. 
 
-Replication:
+
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
 ```{r out.width="400px", fig.cap="Figure 2 a"}
 knitr::include_graphics("https://github.com/SydneyJansen/data-analysis-replication/blob/main/images/fig2.png")
 ```
+Replication:
 
 ```{r }
 
@@ -152,31 +155,61 @@ Results: Our analysis of GECK and O notes reveals that the lizards increased the
 
 Replication: 
 
+The authors used linear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models.
 
-The relationship between the number of cackle calls and the number of GECK-O syllables in a call series was investigated with Spearman rank correlations (using SPSS Statistics 21). This was done with two data sets: (i) across all males that produced at least five call series, from each of these (n¼5 males) we randomly selected five call series independent of the treatment,and (ii) within the one male from which we recorded the highest number of calls (n¼254 calls)
-The authors used alinear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models.
-
-[Be sure to **thoroughly** explain what replications you are doing and comment your code so that it is easy for a reader to understand. Include in this section relevant tables/figures/values from the original paper for comparison to what you accomplished with your replication. Note that I want you to do the bulk of any *exposition* using text and markdown syntax outside of code blocks. That is, your document should not just be one big code block with ***R*** style comments but rather a nicely formatted report with code separated from exposition, interpretation, and dicussion.]
 
 In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models (LMMs), model residuals were checked visually.
 
-Descriptive statistical analysis (summarizing and describing the primary properties of a dataset):
-Counting Different Call Types and Measuring Their Amplitude: This involves basic descriptive analysis, where the researchers counted the occurrences of different vocalization types and measured their amplitude to describe the vocal behavior of tokay geckos.
-Measurement of Call Durations: Measuring and comparing the durations of GECK and O notes under different noise conditions also fall under descriptive analysis. It provides a straightforward description of how call durations vary with environmental noise.
-
-
-```{}
-# Load the lme4 package
-library(lme4)
-
+Replication: 
+Have to do these to get lmer to work
+#remove.packages("Matrix")
+#remove.packages("lme4")
+#install.packages("lme4", type = "source")
+#library(lme4
+```{r}
 # Fit the linear mixed model
-lmm <- lmer(Duration ~ Treatment + (1 | Gecko) + (1 | Series), data = data)
+lmm <- lmer(duration ~ treatment + (1 | animal) + (1 | series), data = datafig2)
 
-# Print the summary of the model
+# Get the summary of the model
 summary(lmm)
+
+# Perform ANOVA for the t value
+anova_result <- anova(lmm)
+
+# Print the ANOVA table
+print(anova_result)
+
+# Extract the p-value from the ANOVA table
+p_value <- anova_result$"Pr(>F)"["treatment", ]
+
+# Print the p-value
+print(p_value)
 
 
 ```
+
+Results:
+REML criterion at convergence: -3480.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.5681 -0.5957  0.0629  0.6941  2.2832 
+
+Random effects:
+ Groups   Name        Variance  Std.Dev.
+ series   (Intercept) 5.365e-05 0.007324
+ animal   (Intercept) 7.103e-04 0.026652
+ Residual             3.512e-04 0.018741
+Number of obs: 703, groups:  series, 122; animal, 6
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept) 0.115948   0.011057  10.486
+treatment   0.004127   0.001961   2.104
+
+Correlation of Fixed Effects:
+          (Intr)
+treatment -0.087
 
 
 
@@ -206,7 +239,10 @@ summary(glmm_result)
 
 
 ```
-Descriptive statistical analysis:
+Descriptive statistical analysis (summarizing and describing the primary properties of a dataset):
+Counting Different Call Types and Measuring Their Amplitude: This involves basic descriptive analysis, where the researchers counted the occurrences of different vocalization types and measured their amplitude to describe the vocal behavior of tokay geckos.
+Measurement of Call Durations: Measuring and comparing the durations of GECK and O notes under different noise conditions also fall under descriptive analysis. It provides a straightforward description of how call durations vary with environmental noise.
+
 
 Methods: 
 
