@@ -6,8 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-# These are some {knitr} options I typically use to format my **RMarkdown** documents in a consistent way. You should feel free to alter these or use other "chunk options" as you see fit!
-# Sometimes, for example, you might want to suppress warnings or messages, and that behavior can be set for specific code chunks individually in the chunk header, e.g., ```{r warning = FALSE, echo = FALSE}
+
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -21,7 +20,7 @@ Methods: The researchers recorded advertisement calls of captive-bred male tokay
 Results: Geckos increased the duration of their call syllables in response to noise, but did not adjust the amplitude of their calls. Instead, they produced more high-amplitude syllables and fewer low-amplitude syllables in noise. This demonstrated that the geckos were able to increase the overall signal-to-noise ratio of their calls without using the Lombard effect. In other words, the geckos traded the number of low-amplitude and high-amplitude syllables in each call series to produce more of the louder notes in noise, rather than increasing the amplitude of all components of their call. 
 
 #Load packages
-```{r message=FALSE}
+```{r warning = FALSE, echo = FALSE}
 library(tidyverse)
 library(knitr)
 library(ggplot2)
@@ -34,11 +33,13 @@ library(mosaic)
 library(coin)
 library(Matrix)
 library(lme4)
+library(gridExtra)
+library(grid)
 
 ```
-#Load in Data: Raw Data from 6 individuals of treatment, series, type, duration, and amplitude. They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
+##Load in Data: Raw Data from 6 individuals of treatment, series, type, duration, and amplitude. They did not modify the provided dataset, but R added NAs in duration, so we are removing those. 
 
-```{r }
+```{r warning = FALSE, echo = FALSE}
 #This worked the entire time until i cleared the environment
 #f<- "https://github.com/SydneyJansen/data-analysis-replication/blob/main/data/rawdata.csv"
 #data<- read.csv(f, header = TRUE)
@@ -57,22 +58,24 @@ print(data)
 ```
 
 
-## Visualization of Data
+### Visualization of Data
 
-Methods: There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise (treatment: noise (1), no noise (0)) and the y axis is the miliseconds of call duration. 
+[Methods:]{.underline} There were not enough graphs and too much information in the "bubble graph", so I am replicating Figure 2 which shows changes in tokay call parameters in relation to background noise/Grand averages (medians and interquartile ranges) of (a) GECK-note duration. The x axis compares noise to no noise (treatment: noise (1), no noise (0)) and the y axis is the miliseconds of call duration. 
 
-Results: There was a slight difference in mean between no noise and noise in relation to call duration. While these results are similar to the original graph, the plot range is different. This is most likely due to me bootstrapping the data instead of doing a LMM or GLMM as stated later in the methods that I will be replicating later. 
+[Results:]{.underline} There was a slight difference in mean between no noise and noise in relation to call duration. While these results are similar to the original graph, the plot range is different. This is most likely due to me bootstrapping the data instead of doing a LMM or GLMM as stated later in the methods that I will be replicating later. 
 
 
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
-```{r out.width="400px", fig.cap="Figure 2 a"}
+```{r echo=FALSE, r out.width="400px", fig.cap="Figure 2 a"}
 knitr::include_graphics("https://github.com/SydneyJansen/data-analysis-replication/blob/main/images/fig2.png")
 ```
-Replication:
 
-```{r }
+[Replication:]{.underline}
+
+
+```{r warning = FALSE, echo = FALSE}
 
 # Filter the data for treatment GECK=2
 datafig2 <- filter(data, type == 2)
@@ -139,133 +142,134 @@ ggsave("fig2.png", plot = my_plot, width = 8, height = 6, units = "in", dpi = 30
 #I have no idea why the plot in the OG is 80-155
 ```
 
-```{r echo=FALSE}
-knitr::include_graphics("images/file.png")
-```
 
-## Statistical Replications/Reanalysis
+### Statistical Replications/Reanalysis
 
-Inferential statistical analysis:
-Methods: I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
+[**Inferential statistical analysis:**]{.underline}
 
-Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).The authors used linear mixed models (LMMs) The effect of the treatment (noise/no noise) on amplitude, duration, and the  number of  call types  was examined  with separate models in R using the package lme4. In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models(LMMs), model residuals were checked visually.
+[Methods:]{.underline} I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
 
-What I intend to replicate: I plan to replicate a linear mixed models (LMMs) from the *R* package `{lme4}` that was used to investigate the treatment effects (noise vs. no noise) on duration of calls. The individual gecko and the call series were included as random effects to account for the repeated measures design of the experiment. There was no more detailed information about R coding in this regard. 
-Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).Results: Our analysis of GECK and O notes reveals that the lizards increased the duration of their call syllables in noise (figure 2a,b). GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p = 0.05), and O notes were 37% longer (x21 = 50.059, p = 0.001).
+[Results:]{.underline} GECK notes produced in noise were 7% longer on average than those uttered in the control condition (x21 = 4.367, p > 0.05). 
+Data: datafig2
+Models:
+null_model: duration ~ (1 | animal) + (1 | series)
+full_model: duration ~ treatment + (1 | animal) + (1 | series)
+           npar     AIC     BIC logLik deviance  Chisq Df Pr(>Chisq)  
+null_model    4 -3485.7 -3467.5 1746.8  -3493.7                       
+full_model    5 -3488.1 -3465.3 1749.0  -3498.1 4.3672  1    0.03664 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Replication: 
+The Chi Square is as reported in the paper: 4.3672
+The P value is 0.03663704 which is p < 0.05
 
-The authors used linear mixed models (LMMs) and generalized linear mixed models (GLMMs) to examine the effects of the noise treatment on various call parameters, such as amplitude, duration, and the number of call types. ​ They also used likelihood ratio tests to compare models including the treatment to null models.
 
-
-In each model the individual and the call series were fitted as random effects to control for the repeated measures design. The treatment effects on amplitude and duration were investigated with linear mixed models (LMMs), model residuals were checked visually.
-
-Replication: 
-Have to do these to get lmer to work
+[Replication:]{.underline}
+Had to do these to get lmer to work
 #remove.packages("Matrix")
 #remove.packages("lme4")
 #install.packages("lme4", type = "source")
 #library(lme4
-```{r}
-# Fit the linear mixed model
-lmm <- lmer(duration ~ treatment + (1 | animal) + (1 | series), data = datafig2)
+```{r warning = FALSE, echo = FALSE}
+# Load the lme4 package
+library(lme4)
 
-# Get the summary of the model
-summary(lmm)
+# Fit the full model including treatment
+full_model <- lmer(duration ~ treatment + (1 | animal) + (1 | series), data = datafig2)
 
-# Perform ANOVA for the t value
-anova_result <- anova(lmm)
+# Fit the null model without treatment
+null_model <- lmer(duration ~ (1 | animal) + (1 | series), data = datafig2)
 
-# Print the ANOVA table
-print(anova_result)
+# Perform likelihood ratio test
+lrt_result <- anova(full_model, null_model)
 
-# Extract the p-value from the ANOVA table
-p_value <- anova_result$"Pr(>F)"["treatment", ]
+# Print the likelihood ratio test result
+print(lrt_result)
+
+# Extract the p-value from the likelihood ratio test result
+p_value <- lrt_result$Pr[2]
 
 # Print the p-value
 print(p_value)
 
+```
+
+
+###Descriptive statistical analysis:
+
+[Methods:]{.underline} Counting Different Call Types and Measuring Their Amplitude: This involves basic descriptive analysis, where the researchers counted the occurrences of different vocalization types and measured their amplitude to describe the vocal behavior of tokay geckos.
+This is seen in Table S1.Numbers of recorded calls used in the analysis of noise-dependent call regulation
+(Fig. 2).
+
+[Results:]{.underline}  While there are 1 or two numbers off by one, the counts were nearly identical to the table. 
+
+```{r echo=FALSE, out.width="300px", fig.cap="S1"}
+knitr::include_graphics("https://github.com/SydneyJansen/data-analysis-replication/blob/main/images/S1.png")
+```
+
+
+[Replication:]{.underline}
+
+```{r warning = FALSE, echo = FALSE}
+# Aggregate data for noise condition
+noise_data <- data |>
+  filter(treatment == 1) |>
+  group_by(animal, series) |>
+  summarise(
+    cackles = sum(type == 1),
+    GECKs = sum(type == 2),
+    Os = sum(type == 3),
+    .groups = 'drop'  # Drop the grouping structure after summarising
+  ) |>
+  group_by(animal) |>
+  summarise(
+    Number_of_call_series = n(),
+    Total_cackles = sum(cackles),
+    Total_GECKs = sum(GECKs),
+    Total_Os = sum(Os),
+    .groups = 'drop'  # Drop the grouping structure after summarizing
+  )
+
+# Aggregate data for no-noise condition
+no_noise_data <- data |>
+  filter(treatment == 0) |>
+  group_by(animal, series) |>
+  summarise(
+    cackles = sum(type == 1),
+    GECKs = sum(type == 2),
+    Os = sum(type == 3),
+    .groups = 'drop'  # Drop the grouping structure after summarizing
+  ) |>
+  group_by(animal) |>
+  summarise(
+    Number_of_call_series = n(),
+    Total_cackles = sum(cackles),
+    Total_GECKs = sum(GECKs),
+    Total_Os = sum(Os),
+    .groups = 'drop'  # Drop the grouping structure after summarizing
+  )
+
+# Combine the counts into one data frame
+combined_counts <- full_join(noise_data, no_noise_data, by = "animal", suffix = c("_noise", "_no_noise"))
+
+# Print the results
+print(combined_counts)
+
+#To save this:
+
+# Convert the data frame to a 'table' grob (graphical object)
+table_grob <- tableGrob(combined_counts)
+
+# Save the table as a PNG
+png(filename = "S1.png", width = 1024, height = 768)
+grid.draw(table_grob)
+dev.off() 
 
 ```
 
-Results:
-REML criterion at convergence: -3480.2
+### Summary/Discussion
 
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--4.5681 -0.5957  0.0629  0.6941  2.2832 
+Following their statstical analysis section and decriptors from their tables, I got very close to replicating each section exactly. In the first section, there was not enough information on what they did to the data to explain the difference in scale. I found the mean and bootstrapped, making the graph look very similar. In the second part, it took my awhile to figure out what the X result meant and realized that was chi-square. They did not explain further than them running an LMM, so the data found just running that was not correct until I ran the likelihood ratio test to find the correct chi and p. In the last part, there must be something different in how I transformed the original data that led to some slightly different counts (by 1) but it was pretty close. 
 
-Random effects:
- Groups   Name        Variance  Std.Dev.
- series   (Intercept) 5.365e-05 0.007324
- animal   (Intercept) 7.103e-04 0.026652
- Residual             3.512e-04 0.018741
-Number of obs: 703, groups:  series, 122; animal, 6
-
-Fixed effects:
-            Estimate Std. Error t value
-(Intercept) 0.115948   0.011057  10.486
-treatment   0.004127   0.001961   2.104
-
-Correlation of Fixed Effects:
-          (Intr)
-treatment -0.087
-
-
-
-
-```{r }
-library(lme4)
-#  log-transformed
-logdata <- lmer(data = data, animal ~ treatment + series + type + duration + amplitude + (1|PairID), REML = FALSE)
-# Check if the data fit the assumptions using the ggResidpanel package:
-resid_panel(model1) # the histogram looks bad; lots of weight in the center and not normally distributed.
-# Make a log version of Used_Material:
-data$log_Used_Material <- log(data$Used_Material)
-# Try the model again using the log_Used_Material.
-model2 <- lmer(data = data, log_Used_Material ~ Experience + Nest_No + Time_Taken + (1|PairID), REML = FALSE)
-# And check again with ggResidpanel:
-resid_panel(model2) # the histogram looks much better now!
-# The values are closer to the results! Same p-value!
-model_summary <- summary(model2)
-print(model_summary)
-# LMM for call amplitude or duration as a function of noise condition, with random intercepts for individual
-lmm_result <- lmer(amplitude ~ noise_condition + (1|individual), data = dataset)
-summary(lmm_result)
-
-# GLMM for count data (e.g., number of call types) with a Poisson distribution
-glmm_result <- glmer(num_call_types ~ noise_condition + (1|individual), data = dataset, family = "poisson")
-summary(glmm_result)
-
-
-```
-Descriptive statistical analysis (summarizing and describing the primary properties of a dataset):
-Counting Different Call Types and Measuring Their Amplitude: This involves basic descriptive analysis, where the researchers counted the occurrences of different vocalization types and measured their amplitude to describe the vocal behavior of tokay geckos.
-Measurement of Call Durations: Measuring and comparing the durations of GECK and O notes under different noise conditions also fall under descriptive analysis. It provides a straightforward description of how call durations vary with environmental noise.
-
-
-Methods: 
-
-Results: 
-
-What I intend to replicate: 
-
-Replication:
-
-```{r }
-
-```
-
-## Summary/Discussion
-
-[Narrative section that overviews how successful were you at replicating the analyses and visualizations in the study. What problems did you encounter? Why might you have encountered those problems? What details were lacking from the original study's methods that might have hampered your ability to replicate the authors' results?]
-
-## References
+### References
 Brumm H, Zollinger SA. 2017 Vocal plasticity in a reptile. Proc. R. Soc. B 284: 20170451.http://dx.doi.org/10.1098/rspb.2017.0451
-
-
-
-
-```{r }
-
-```
