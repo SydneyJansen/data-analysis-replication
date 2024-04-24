@@ -68,7 +68,7 @@ print(data)
 
 Figure 2: Grand averages (medians and interquartile ranges) of (a) GECK-note duration with the bars denoting the confidence level. 
 
-```{r echo=FALSE, r out.width="400px", fig.cap="Figure 2 a"}
+```{r echo=FALSE, out.width="400px", fig.cap="Figure 2 a"}
 knitr::include_graphics("https://github.com/SydneyJansen/data-analysis-replication/blob/main/images/fig2.png")
 ```
 
@@ -203,7 +203,7 @@ This is seen in Table S1.Numbers of recorded calls used in the analysis of noise
 
 [Results:]{.underline}  While there are 1 or two numbers off by one, the counts were nearly identical to the table. 
 
-```{r echo=FALSE, out.width="300px", fig.cap="S1"}
+```{r echo=FALSE, out.width="400px", fig.cap="S1"}
 knitr::include_graphics("https://github.com/SydneyJansen/data-analysis-replication/blob/main/images/S1.png")
 ```
 
